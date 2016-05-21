@@ -24,11 +24,11 @@ Scene* New::createScene()
 
 vector<Vec2> points(int i,int w,int x,int y)
 {
-	vector<Vec2> rect;
+    vector<Vec2> rect;
 
     for(int j=0;j<i;j++){
     	rect.push_back(Vec2(w * sin(atan(1)*4*(j*360/i)/180) + x,
-    				   w * cos(atan(1)*4*(j*360/i)/180) + y));
+    			    w * cos(atan(1)*4*(j*360/i)/180) + y));
     }
 
     return rect;
@@ -61,7 +61,7 @@ bool touchPoints(vector<Vec2> points,int x,int y)
 
 DrawNode* polygon(int i,int w,int * color) 
 {
-	auto polygonNode = DrawNode::create();
+    auto polygonNode = DrawNode::create();
 
     auto _color = Color4F(color[0],color[1],color[2],1);
 
@@ -70,7 +70,7 @@ DrawNode* polygon(int i,int w,int * color)
     for(int j=0;j<i;j++)
     {
     	polygon[j] = Vec2(w * sin(atan(1)*4*(j*360/i)/180),
-    				   w * cos(atan(1)*4*(j*360/i)/180));
+    			  w * cos(atan(1)*4*(j*360/i)/180));
     }
 
     polygonNode->drawPolygon(polygon, i, _color, 1, _color);
@@ -80,7 +80,7 @@ DrawNode* polygon(int i,int w,int * color)
 
 bool New::init()
 {
-	if ( !Layer::init() )
+    if ( !Layer::init() )
     {
         return false;
     }
@@ -100,9 +100,9 @@ bool New::init()
 
     auto listener = EventListenerTouchOneByOne::create();
 	
-	auto dispatcher = Director::getInstance()->getEventDispatcher();
+    auto dispatcher = Director::getInstance()->getEventDispatcher();
 
-	listener->setSwallowTouches(true);
+    listener->setSwallowTouches(true);
 
     listener->onTouchBegan = [&](Touch* touch,Event* event) {
         auto target = static_cast<DrawNode *>(event->getCurrentTarget());
@@ -112,53 +112,53 @@ bool New::init()
     	bool isTouch = false;
 
         for(auto polygon: this->polygonArray)
-		{
-			if(touchPoints(points(5,50,polygon->getPositionX(),polygon->getPositionY()),pt.x,pt.y)){
-				polygon->removeFromParentAndCleanup(true);
+	{
+		if(touchPoints(points(5,50,polygon->getPositionX(),polygon->getPositionY()),pt.x,pt.y)){
+			polygon->removeFromParentAndCleanup(true);
 
-				this->polygonArray.eraseObject(polygon, false);
+			this->polygonArray.eraseObject(polygon, false);
 
-				isTouch = true;
+			isTouch = true;
 
-				break;
-			}
+			break;
 		}
+	}
 
-		if(!isTouch){
-			int color[3] = { RandomHelper::random_int(0,255),
-    						 RandomHelper::random_int(0,255),
-    						 RandomHelper::random_int(0,255) };
+	if(!isTouch){
+	    int color[3] = { RandomHelper::random_int(0,255),
+    	    	  	 RandomHelper::random_int(0,255),
+    	    	 	 RandomHelper::random_int(0,255) };
 
-	    	int edgeNum = RandomHelper::random_int(3,8);
-	    	int edgeLen = RandomHelper::random_int(20,50);
-			
-			auto polygonNode = polygon(edgeNum, edgeLen, color);
+    	    int edgeNum = RandomHelper::random_int(3,8);
+    	    int edgeLen = RandomHelper::random_int(20,50);
+		
+	    auto polygonNode = polygon(edgeNum, edgeLen, color);
 
-			this->polygonArray.pushBack(polygonNode);
-			
-			int i = edgeNum;
-	    	int w = edgeLen;
+	    this->polygonArray.pushBack(polygonNode);
+	
+	    int i = edgeNum;
+    	    int w = edgeLen;
 
-	    	Vec2 polygon[i];
+    	    Vec2 polygon[i];
 
-		    for(int j=0;j<i;j++)
-		    {
-		    	polygon[j] = Vec2(w * sin(atan(1)*4*(j*360/i)/180),
-		    				   w * cos(atan(1)*4*(j*360/i)/180));
-		    }
-			
-			auto physicsBody = PhysicsBody::createPolygon(polygon,
-														  edgeNum,
-														  PhysicsMaterial(0.1f, 0.5f, 0.0f));
-	    	
-			physicsBody->setDynamic(true);
+	    for(int j=0;j<i;j++)
+	    {
+	    	polygon[j] = Vec2(w * sin(atan(1)*4*(j*360/i)/180),
+	    				   w * cos(atan(1)*4*(j*360/i)/180));
+	    }
+		
+	    auto physicsBody = PhysicsBody::createPolygon(polygon,
+							  edgeNum,
+							  PhysicsMaterial(0.1f, 0.5f, 0.0f));
+    
+	    physicsBody->setDynamic(true);
 
-			polygonNode->setPhysicsBody(physicsBody);
-	      				
-		    polygonNode->setPosition(Vec2(pt.x,pt.y));
+	    polygonNode->setPhysicsBody(physicsBody);
+      				
+	    polygonNode->setPosition(Vec2(pt.x,pt.y));
 
-		    target->addChild(polygonNode);
-		}
+	    target->addChild(polygonNode);
+	}
 
     	return false;
     };
@@ -173,5 +173,5 @@ bool New::init()
 
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener,this);
 
-	return true;
+    return true;
 }
